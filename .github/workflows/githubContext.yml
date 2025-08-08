@@ -6,8 +6,11 @@ on:
 jobs:
  github_context:
   runs-on: ubuntu-latest
+
+  env:
+   MY_ENV_VAR: "Hello from env context"
   steps:
-    - name: Print Info about Github
+    - name: Step 1-Print Info about Github
       run:
        echo 'Repository details ${{github.repository}}'
        echo 'Repository id ${{github.repository_id}}'
@@ -19,4 +22,15 @@ jobs:
        echo 'Trigger event ${{github.event.name}}'
        echo 'Run id ${{github.run_id}}'
        echo 'Runner number is ${{github.run_number}}'
+       
+    -  name: Step 2 - Set an output
+       id: my_step
+       run: echo "result=Step completed successfully" >>$GITHUB_OUTPUT
+       
+    -  name: Step 3- Use env,job,and steps contexts
+       run: echo "Custom Env Variable:${{env.MY_ENV_VAR}}'
+            echo "Previous Step Output:${{steps.my_step.outputs.result}}"
+       
+       
+       
       
