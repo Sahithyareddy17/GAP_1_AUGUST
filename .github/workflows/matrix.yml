@@ -1,4 +1,4 @@
-name: Matrix Context
+name: Matrix with Outputs
 
 
 on:
@@ -9,13 +9,34 @@ jobs:
   strategy:
    matrix:
      os: [ubuntu-latest, windows-latest]
-     node: [14]
+     node: ['18.x', '20.x']
+  outputs:
+    node_version: ${{steps.check_node.outputs.node_version}}
   steps:
+    - name: checkout
+      uses: actions/checkout@v4
+    
+  steps:
+    - name: Set up Node.js
     - uses: actions/setup-node@v4
       with:
         node-version: ${{matrix.node}}"
+        check-latest: true
+    - name: Check Node.js version
+      id: check_node
+      run: |
+       VERSION=$(node -v)
+       echo "Node version in this job: $VERSION"
+       echo "node_version=$VERSION" >> $GITHUB_OUTPUT
+ summary:
+   runs-on: ubuntu-latest
+   needs: build
+   steps:
+     - name: Print Node versions in table
+       run: |
+         echo "| OS Requested Node | Installed Node |"
+         echo "|---------|----------|---------|"
        
-    - name: Output Node version
-      run: node --version
+  
    
        
