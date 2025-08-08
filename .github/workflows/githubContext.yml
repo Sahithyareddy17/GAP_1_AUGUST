@@ -6,9 +6,7 @@ on:
 jobs:
  github_context:
   runs-on: ubuntu-latest
-
-  env:
-   MY_CUSTOM_VAR: "Hello from env context"
+  
   steps:
     - name: Step 1-Print Info about Github
       run:
@@ -28,6 +26,8 @@ jobs:
        run: echo "my_output=Step two completed successfully" >>$GITHUB_OUTPUT
        
     -  name: Step 3- Use env,job,and steps contexts
+       env:
+         MY_CUSTOM_VAR: "Hello from env context"
        run:
         echo "Custom Env Variable:${{env.MY_CUSTOM_VAR}}'
             echo "Previous Step Output:${{steps.step_two.outputs.my_output}}"
