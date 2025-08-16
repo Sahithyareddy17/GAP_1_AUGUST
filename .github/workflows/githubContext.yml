@@ -1,0 +1,37 @@
+name: GitHub Context
+
+
+on:
+ workflow_dispatch
+jobs:
+ github_context:
+  runs-on: ubuntu-latest
+  
+  steps:
+    - name: Step 1-Print Info about Github
+      run:
+       echo 'Repository details ${{github.repository}}'
+       echo 'Repository id ${{github.repository_id}}'
+       echo 'Repository url ${{github.repositoryUrl}}'
+       echo 'Repo token ${{github.token}}'
+       echo 'Workflow name ${{github.workflow}}'
+       echo 'Actor ${{github.actor}}'
+       echo 'Ref details ${{github.ref}}'
+       echo 'Trigger event ${{github.event.name}}'
+       echo 'Run id ${{github.run_id}}'
+       echo 'Runner number is ${{github.run_number}}'
+       
+    -  name: Step 2 - Set an output
+       id: step_two
+       run: echo "my_output=Step two completed successfully" >>$GITHUB_OUTPUT
+       
+    -  name: Step 3- Use env,job,and steps contexts
+       env:
+         MY_CUSTOM_VAR: "Hello from env context"
+       run:
+        echo "Custom Env Variable:$MY_CUSTOM_VAR"
+            echo "Previous Step Output:${{steps.step_two.outputs.my_output}}"
+       
+       
+       
+      

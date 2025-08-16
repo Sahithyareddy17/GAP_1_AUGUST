@@ -1,0 +1,22 @@
+name: Job Output Context
+
+
+on:
+ workflow_dispatch
+
+jobs:
+ job1:
+  runs-on: ubuntu-latest
+  outputs:
+    job_message: ${{steps.generate.output.msg}}
+  steps:
+    - name: Generate message
+      id: generate
+      run: echo "msg=Hello from Job 1" >> $ GITHUB_OUTPUT
+ 
+ job2:
+  runs-on: ubuntu-latest
+  needs: job1
+  steps:
+    - name: Use job output
+      run: echo "Message from job1 is:${{needs.job1.outputs.job_message}}"
