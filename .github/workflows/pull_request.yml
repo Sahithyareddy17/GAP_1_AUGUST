@@ -1,36 +1,65 @@
-name: Pull_request events Workflow
+ 
+name: Pull_request Activity Examples
  
 on:
   pull_request:
-    types: [closed, assigned, labeled, edited]
+    types: [opened, synchronize, closed, assigned, labeled, edited]
  
 jobs:
-  merged:
+  opened:
+    if: github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "📢 PR opened: #${{ github.event.number }}"
+          echo "Title: ${{ github.event.pull_request.title }}"
+          echo "Head: ${{ github.event.pull_request.head.ref }} -> Base: ${{ github.event.pull_request.base.ref }}"
+ 
+  synchronize:
+    if: github.event.action == 'synchronize'
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "🔄 New commits pushed to PR #${{ github.event.number }}"
+          echo "Head SHA: ${{ github.event.pull_request.head.sha }}"
+ 
+  closed_merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - run: echo "✅ PR merged into ${{ github.event.pull_request.base.ref }}"
+      - run: |
+          echo "✅ PR #${{ github.event.number }} merged into ${{ github.event.pull_request.base.ref }}"
+          echo "Merged by: ${{ github.event.pull_request.merged_by.login }}"
  
-  not_merged:
+  closed_not_merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-      - run: echo "❌ PR closed without merge"
+      - run: |
+          echo "❌ PR #${{ github.event.number }} closed without merge"
+          echo "Base: ${{ github.event.pull_request.base.ref }} | Head: ${{ github.event.pull_request.head.ref }}"
  
   assigned:
     if: github.event.action == 'assigned'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "👤 Assigned to ${{ github.event.assignee.login }}"
+      - run: |
+          echo "👤 Assignee added: ${{ github.event.assignee.login }}"
+          echo "PR: #${{ github.event.number }} - ${{ github.event.pull_request.title }}"
  
   labeled:
     if: github.event.action == 'labeled'
     runs-on: ubuntu-latest
     steps:
-     - run: echo "🏷️ Label '${{ github.event.label.name }}' added"
+      - run: |
+          echo "🏷️ Label added: ${{ github.event.label.name }}"
+          echo "PR: #${{ github.event.number }}"
  
   edited:
     if: github.event.action == 'edited'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "📝 Title is now '${{ github.event.pull_request.title }}'"
+      - run: |
+          echo "📝 PR edited. New title: ${{ github.event.pull_request.title }}"
+          echo "URL: ${{ github.event.pull_request.html_url }}"
+ 
