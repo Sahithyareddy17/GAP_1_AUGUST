@@ -1,27 +1,27 @@
 name: Schedule Workflow
 
 on:
-  schedule:
-   - cron: '*/5 * * * *'
+ schedule:
+  - cron: "*/5 * * * *"
+ workflow_dispatch:
 
-  
 jobs:
- build:
+ say-hello:
    runs-on: ubuntu-latest
    steps:
-     - name: Print build
-       run: echo 'build'
+     - name: Hello
+       run: echo "hello from schedule"
  test:
    runs-on: windows-latest
    steps:
      - name: Print test - chrome
-       run: echo 'test chrome'
+       run: echo "test chrome"
      - name: Print test - edge
-       run: echo 'test edge'
+       run: echo "test edge"
 
  deploy:
    runs-on: ubuntu-latest
    steps:
-     - name: Print deploy
-       run: echo 'deploy'
+     - name: Deploy step
+       run: echo "deploying"
  
