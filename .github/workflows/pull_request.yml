@@ -6,11 +6,12 @@ on:
  
 jobs:
   build:
-    runs-on: ubuntu-latest
-    steps:
+   if: github.event.action == 'synchronize'
+   runs-on: ubuntu-latest
+   steps:
      - uses: actions/checkout@v4
      - name: Print build
-       run: echo "✅ Build job is running correctly"
+       run: echo "✅ Build job is running correctly(triggered by synchronize)"
  
   merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == true
