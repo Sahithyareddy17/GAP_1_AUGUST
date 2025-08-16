@@ -1,0 +1,16 @@
+name: env context
+on: [workflow_dispatch]
+env:
+  LEVEL: "workflow"
+  FOO:   "from-workflow"
+jobs:
+  show-env:
+    runs-on: ubuntu-latest
+    env:
+      LEVEL: "job"            # overrides workflow LEVEL
+    steps:
+      - run: echo "LEVEL=$LEVEL, FOO=$FOO"   # -> job, from-workflow
+      - name: Step override
+        env:
+          LEVEL: "step"       # overrides job LEVEL
+        run: echo "LEVEL=$LEVEL"
