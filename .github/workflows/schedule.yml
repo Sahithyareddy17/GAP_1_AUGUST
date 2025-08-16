@@ -1,18 +1,16 @@
 name: Schedule Workflow
 
-
-
 on:
- schedule:
-  - cron: '0 9 * * *'
+  schedule:
+   - cron: '*/5 * * * *'
 
+  
 jobs:
  build:
    runs-on: ubuntu-latest
    steps:
      - name: Print build
        run: echo 'build'
-
  test:
    runs-on: windows-latest
    steps:
