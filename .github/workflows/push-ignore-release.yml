@@ -1,0 +1,36 @@
+name: Ignore release branches
+ 
+on:
+  push:
+    branches-ignore: ["release/**"]   # 🚫 no runs for release/* branches
+ 
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+ 
+      - name: Show trigger
+        run: |
+          echo "event=${{ github.event_name }}"
+          echo "ref=${{ github.ref }}"
+          echo "✅ Running because branch is NOT release/**"
+ 
+      - name: Build
+        run: echo "🔨 build step here (e.g., npm ci && npm run build or mvn -B clean package)"
+ 
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo "✅ test step here (e.g., npm test or mvn -B test)"
+ 
+  deploy:
+    needs: test
+    # guard deploy if you only want it on master/main (optional)
+    # if: startsWith(github.ref, 'refs/heads/master')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "🚀 deploy step here (e.g., rsync/ssh, Docker push, cloud CLI)"
