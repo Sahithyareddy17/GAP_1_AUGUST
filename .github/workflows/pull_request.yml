@@ -3,27 +3,45 @@ name: pull_request Events Workflow
 on:
   pull_request:
     types: [synchronize, closed, assigned, labeled, edited]
+  push:
+    branches: [master]
  
 jobs:
   build:
-   if: github.event.action == 'synchronize'
-   runs-on: ubuntu-latest
-   steps:
-     - uses: actions/checkout@v4
-     - name: Print build
-       run: echo "✅ Build job is running correctly(triggered by synchronize)"
+    if: github.event.action == 'synchronize' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: echo "🏗️ Build job running"
+ 
+  test:
+    needs: build
+    if: github.event.action == 'synchronize' || github.event_name == 'push'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test
+        run: echo "✅ Tests passed"
+ 
+  deploy:
+    needs: [build, test]
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "🚀 Deploying because PR was merged into master"
  
   merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     steps:
-      - run: echo "✅ PR merged into ${{ github.event.pull_request.base.ref }}"
+      - run: echo "PR merged into ${{ github.event.pull_request.base.ref }}"
  
   not-merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == false
     runs-on: ubuntu-latest
     steps:
-      - run: echo "❌ PR closed without merge"
+      - run: echo "PR closed without merge"
  
   assigned:
     if: github.event.action == 'assigned'
