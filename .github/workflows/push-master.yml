@@ -1,0 +1,12 @@
+name: Push to master only
+ 
+on:
+ push:
+   branches: [master]
+     
+jobs:
+ build:
+   runs-on: ubuntu-latest
+   steps: [ { name: Show trigger, run: echo "Runs ONLY on master" } ]
+  
+     
