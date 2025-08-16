@@ -1,0 +1,10 @@
+name: Run on version tags only
+on:
+  push:
+    tags:
+      - "v*"          # runs only when you push tags like v1.0, v2.3.4
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🚀 Build triggered by tag $GITHUB_REF"
