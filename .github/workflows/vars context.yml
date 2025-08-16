@@ -1,0 +1,9 @@
+name: vars context
+on: [workflow_dispatch]
+jobs:
+  use-vars:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "ENVIRONMENT=${{ vars.ENVIRONMENT }}"
+          echo "REGION=${{ vars.DEPLOY_REGION || 'fallback-region' }}"
