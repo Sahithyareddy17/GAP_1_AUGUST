@@ -1,0 +1,36 @@
+name: Pull_request Info Workflow
+ 
+on:
+  pull_request:
+    types: [closed, assigned, labeled, edited]
+ 
+jobs:
+  merged:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ PR merged into ${{ github.event.pull_request.base.ref }}"
+ 
+  not_merged:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "❌ PR closed without merge"
+ 
+  assigned:
+    if: github.event.action == 'assigned'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "👤 Assigned to ${{ github.event.assignee.login }}"
+ 
+  labeled:
+    if: github.event.action == 'labeled'
+    runs-on: ubuntu-latest
+    steps:
+     - run: echo "🏷️ Label '${{ github.event.label.name }}' added"
+ 
+  edited:
+    if: github.event.action == 'edited'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "📝 Title is now '${{ github.event.pull_request.title }}'"

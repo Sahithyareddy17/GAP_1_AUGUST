@@ -1,8 +1,8 @@
-name: issues Workflow
+name: pull_request_review
 
 
 
-on: issues
+on: pull_request_review
 
 jobs:
  build:
