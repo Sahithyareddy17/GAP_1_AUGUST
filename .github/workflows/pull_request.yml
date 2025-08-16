@@ -1,30 +1,42 @@
-name: pull_request Workflow
-
-
-
-on: 
- pull_request:
-    types: assigned
-  
-
-jobs:
- build:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Print build
-       run: echo 'build'
-
- test:
-   runs-on: windows-latest
-   steps:
-     - name: Print test - chrome
-       run: echo 'test chrome'
-     - name: Print test - edge
-       run: echo 'test edge'
-
- deploy:
-   runs-on: ubuntu-latest
-   steps:
-     - name: Print deploy
-       run: echo 'deploy'
+name: pull_request Events Workflow
  
+on:
+  pull_request:
+    types: [synchronize, closed, assigned, labeled, edited]
+ 
+jobs:
+  build:
+    if: github.event.action == 'synchronize'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🔄 Re-testing PR #${{ github.event.number }} because of new commits"
+ 
+  merged:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "✅ PR merged into ${{ github.event.pull_request.base.ref }}"
+ 
+  not-merged:
+    if: github.event.action == 'closed' && github.event.pull_request.merged == false
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "❌ PR closed without merge"
+ 
+  assigned:
+    if: github.event.action == 'assigned'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "👤 Assigned to ${{ github.event.assignee.login }}"
+ 
+  labeled:
+    if: github.event.action == 'labeled'
+    runs-on: ubuntu-latest
+    steps:
+     - run: echo "🏷️ Label '${{ github.event.label.name }}' added"
+ 
+  edited:
+    if: github.event.action == 'edited'
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "📝 Title is now '${{ github.event.pull_request.title }}'"
