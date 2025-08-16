@@ -6,10 +6,11 @@ on:
  
 jobs:
   build:
-    if: github.event.action == 'synchronize'
     runs-on: ubuntu-latest
     steps:
-      - run: echo "🔄 Re-testing PR #${{ github.event.number }} because of new commits"
+     - uses: actions/checkout@v4
+     - name: Print build
+       run: echo "✅ Build job is running correctly"
  
   merged:
     if: github.event.action == 'closed' && github.event.pull_request.merged == true
