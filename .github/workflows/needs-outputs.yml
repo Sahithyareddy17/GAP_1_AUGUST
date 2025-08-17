@@ -1,0 +1,20 @@
+name: needs-outputs context
+on: [workflow_dispatch]
+ 
+jobs:
+  make-version:
+    runs-on: ubuntu-latest
+    outputs:
+version: ${{ steps.mk.outputs.version }}
+    steps:
+      - id: mk
+        run: |
+          VER="1.0.${{ github.run_number }}-${{ github.sha::0:7 }}"
+          echo "version=$VER" >> "$GITHUB_OUTPUT"
+- run: echo "Made version ${{ steps.mk.outputs.version }}"
+ 
+  use-version:
+    runs-on: ubuntu-latest
+    needs: [make-version]
+    steps:
+      - run: echo "Got version from previous job: ${{ needs.make-version.outputs.version }}"
