@@ -1,0 +1,13 @@
+name: outputs context
+on: [workflow_dispatch]
+ 
+jobs:
+  steps-out:
+    runs-on: ubuntu-latest
+    steps:
+      - id: calc
+        run: |
+          echo "tag=v${{ github.run_number }}-${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+ 
+      - name: Show tag
+        run: echo "Tag is: ${{ steps.calc.outputs.tag }}"
